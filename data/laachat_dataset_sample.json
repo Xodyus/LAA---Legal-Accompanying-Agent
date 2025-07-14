@@ -1,0 +1,33 @@
+[
+  {
+    "id": 1,
+    "query": {
+      "en": "What is the punishment for theft?",
+      "ta": "திருட்டுக்கு என்ன தண்டனை?",
+      "te": "దొంగతనానికి శిక్ష ఏమిటి?"
+    },
+    "response": {
+      "section": {
+        "act": "IPC",
+        "section_number": "379",
+        "title": "Theft"
+      },
+      "description": "Theft is punishable with imprisonment up to 3 years, or fine, or both.",
+      "cultural_reference": "Don't steal bikes. This isn't a movie!",
+      "substantive_guidance": "File an FIR and consult a lawyer.",
+      "lawyer_panel": "Panel: Legal Aid Team"
+    },
+    "translated_response": {
+      "ta": {
+        "description": "திருட்டுக்கு 3 ஆண்டுகள் வரை சிறை அல்லது அபராதம் விதிக்கலாம்.",
+        "cultural_reference": "",
+        "substantive_guidance": ""
+      },
+      "te": {
+        "description": "దొంగతనానికి గరిష్ఠంగా 3 సంవత్సరాల జైలు లేదా జరిమానా విధించవచ్చు.",
+        "cultural_reference": "",
+        "substantive_guidance": ""
+      }
+    }
+  }
+]
