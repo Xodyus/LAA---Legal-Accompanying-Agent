@@ -11,6 +11,7 @@ import logging
 # AI/LLM components
 from transformers import pipeline, AutoModelForSeq2SeqLM, AutoTokenizer
 import torch
+import requests
 
 # Speech processing
 import speech_recognition as sr
@@ -126,6 +127,44 @@ def initialize_models():
     ai_models.load_translation("ta")
     ai_models.load_translation("te")
 
+# Hugging Face API call for LLm response
+def query_huggingface_bart(input_text: str) -> str:
+    api_token = os.getenv("HF_API_TOKEN")
+    if not api_token:
+        raise ValueError("HF_API_TOKEN not set in environment variables")
+
+    headers = {
+        "Authorization": f"Bearer {api_token}"
+    }
+
+    json_data = {
+        "inputs": input_text,
+        "parameters": {
+            "max_length": 200
+        }
+    }
+
+    response = requests.post(
+        "https://api-inference.huggingface.co/models/facebook/bart-base",
+        headers=headers,
+        json=json_data
+    )
+
+    if response.status_code != 200:
+        raise RuntimeError(f"Hugging Face API error: {response.text}")
+
+    output = response.json()
+    return output[0]["generated_text"] if isinstance(output, list) else output
+
+
+# Enhanced retrieval with semantic similarity fallback
+def retrieve_answer(query: str, lang: str = "en", use_llm: bool = False):
+    ...
+    if use_llm:
+        input_text = f"Answer this legal question for India concisely: {query}"
+        llm_response = query_huggingface_bart(input_text)
+        ...
+
 # Enhanced retrieval with semantic similarity fallback
 def retrieve_answer(query: str, lang: str = "en", use_llm: bool = False):
     # First try exact match
@@ -140,9 +179,9 @@ def retrieve_answer(query: str, lang: str = "en", use_llm: bool = False):
             # Translate to English if needed
             if lang != "en":
                 ai_models.load_translation(lang)
-                if lang in ai_models.translation_models:
-                    translated = ai_models.translation_models[lang](query)
-                    query = translated[0]['translation_text']
+                if use_llm:
+                    input_text = f"Answer this legal question for India concisely: {query}"
+                    llm_response = query_huggingface_bart(input_text)
 
             # Generate response with LLM
             input_text = f"Answer this legal question for India concisely: {query}"

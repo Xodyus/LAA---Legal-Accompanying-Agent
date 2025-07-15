@@ -8,3 +8,4 @@ speechrecognition
 sentencepiece
 python-multipart
 pydantic
+requests
